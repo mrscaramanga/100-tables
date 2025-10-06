@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://lh3.googleusercontent.com/sitesv/AICyYdbZr9hO79FQOnM5Xn4_jD1wpMVdjNe5RCmiEQZXO4R4L4bhQKTIa9XmN0j5Fbtd3AO1oAqnvcUNJFBr-jPeHZh_H4J0xeYs1m9aa-cG9seNQY7g5a8iGb49m47mIuFBWAyq4MYaanwGivEaiVKMoGbnrMI4rAM01x0xwpUtzk8ODtJD5eTv70nvwoY=w1280">
+    <title>100 Tables by Alexandearx</title>
+    <style>
+        /* --- Tema Dasar (Dark Mode Default) --- */
+        :root {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --text-color: #e2e8f0;
+            --accent-color: #7dd3fc;
+            --button-bg: #0ea5e9;
+            --button-hover: #0284c7;
+            --border-color: #334155;
+            --correct-color: #10b981;
+            --wrong-color: #ef4444;
+            --table-odd-bg: #0f172a;
+            --table-even-bg: #1e293b;
+            transition: all 0.3s ease; /* Transisi untuk mode gelap/terang */
+        }
+
+        /* --- Light Mode --- */
+        .light-mode {
+            --bg-color: #f1f5f9;
+            --card-color: #ffffff;
+            --text-color: #1e293b;
+            --accent-color: #0ea5e9;
+            --button-bg: #3b82f6;
+            --button-hover: #2563eb;
+            --border-color: #cbd5e1;
+            --correct-color: #16a34a;
+            --wrong-color: #dc2626;
+            --table-odd-bg: #f8fafc;
+            --table-even-bg: #f1f5f9;
+        }
+
+        /* --- Gaya Umum --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 25px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .type-select {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .type-select label {
+            background-color: var(--border-color);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--text-color); /* Pastikan teks terlihat */
+        }
+        .type-select input[type="radio"]:checked + label {
+            background-color: var(--button-bg);
+            color: white;
+            font-weight: bold;
+        }
+        .type-select input[type="radio"] {
+            display: none;
+        }
+        button {
+            background-color: var(--button-bg);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: var(--button-hover);
+        }
+        .question {
+            text-align: center;
+            font-size: 2.5em;
+            margin: 30px 0;
+            min-height: 60px;
+        }
+        .input-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #answer-input {
+            padding: 10px;
+            font-size: 1.5em;
+            width: 50%;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .result {
+            text-align: center;
+            font-size: 1.2em;
+            min-height: 25px;
+        }
+        .result.correct { color: var(--correct-color); }
+        .result.wrong { color: var(--wrong-color); }
+        
+        /* Table Style */
+        #history-table, #multiplication-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        #history-table th, #history-table td, #multiplication-table th, #multiplication-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        #history-table th, #multiplication-table th {
+            background-color: var(--border-color);
+            color: var(--accent-color);
+        }
+        #history-table tr:nth-child(even), #multiplication-table tr:nth-child(even) {
+            background-color: var(--table-even-bg);
+        }
+        #history-table tr:nth-child(odd), #multiplication-table tr:nth-child(odd) {
+            background-color: var(--table-odd-bg);
+        }
+        
+        /* Gaya Toggle Mode */
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--card-color);
+            border-radius: 50px;
+            padding: 10px 10px; 
+            cursor: pointer;
+            font-size: 20px;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        /* Gaya Tabel 1-100 */
+        .table-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+        }
+        .table-section h3 {
+            text-align: center;
+            color: var(--accent-color);
+        }
+        #multiplication-table-wrap {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        #multiplication-table th, #multiplication-table td {
+            padding: 5px;
+            font-size: 0.8em;
+        }
+        #multiplication-table .header-cell {
+            font-weight: bold;
+            background-color: var(--button-bg) !important;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        #multiplication-table .row-header {
+            font-weight: bold;
+            background-color: var(--button-bg) !important;
+            color: white;
+            position: sticky;
+            left: 0;
+            z-index: 1;
+        }        
+        .header-left {
+            float: left;
+            position: absolute;
+            top: 20px;
+            left: 20px; 
+            cursor: pointer; 
+        }
+        .header-center { 
+            position: absolute;
+            top: 20px; 
+            cursor: pointer; 
+        }
+    </style>
+</head>
+<body class="dark-mode"> <div class="mode-toggle" id="mode-toggle">☀️</div> 
+        <div class="header-left">
+            <a href="https://linktr.ee/wangsaguna" class="active"> 
+                <img class="logo-apk" src="https://ugc.production.linktr.ee/6ed9f0d7-9757-49e2-9e49-c22ab025614f_Gemini-Generated-Image-fs27ovfs27ovfs27.png?io=true&size=avatar-v3_0" 
+                title="More by Alexandearx" width="auto" height="50px" 
+                    style="border-radius: 50px;"> 
+            </a>
+        </div>   
+        <div class="header-center">
+            <a href="https://drive.google.com/file/d/19VZd3lTai68So-8RvwVTsO0DQ4vO3vMK/view?usp=drive_link" class="active"> 
+                <img class="logo-apk" src="https://lh3.googleusercontent.com/sitesv/AICyYdbZr9hO79FQOnM5Xn4_jD1wpMVdjNe5RCmiEQZXO4R4L4bhQKTIa9XmN0j5Fbtd3AO1oAqnvcUNJFBr-jPeHZh_H4J0xeYs1m9aa-cG9seNQY7g5a8iGb49m47mIuFBWAyq4MYaanwGivEaiVKMoGbnrMI4rAM01x0xwpUtzk8ODtJD5eTv70nvwoY=w1280" 
+                title="Android apk download" width="auto" height="50px" 
+                    style="border-radius: 50px;"> 
+            </a>
+        </div>   
+    <div class="container">
+        <h1>Kuis Perkalian Interaktif</h1>
+        
+        <div class="type-select">
+            <input type="radio" id="type-integer" name="number-type" value="integer" checked>
+            <label for="type-integer">Bilangan Bulat (±)</label>
+            <input type="radio" id="type-real" name="number-type" value="real">
+            <label for="type-real">Bilangan Real</label>
+            <input type="radio" id="type-fraction" name="number-type" value="fraction">
+            <label for="type-fraction">Pecahan</label>
+        </div>
+        
+        <div class="controls">
+            <button id="new-question">Soal Baru</button>
+            <button id="check-answer">Periksa Jawaban</button>
+        </div>
+
+        <div id="question" class="question">Klik "Soal Baru" untuk mulai!</div>
+        
+        <div class="input-area">
+            <input type="text" id="answer-input" placeholder="Jawab di sini" disabled>
+        </div>
+
+        <div id="result" class="result"></div>
+        
+        <table id="history-table">
+            <thead>
+                <tr>
+                    <th>Soal</th>
+                    <th>Jawaban Anda</th>
+                    <th>Hasil</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+
+        <div class="table-section">
+            <button id="toggle-table-btn">Tampilkan Tabel Perkalian 1-100</button>
+            <div id="multiplication-table-wrap" style="display:none;">
+                <table id="multiplication-table">
+                    </table>
+            </div>
+        </div>
+
+    </div> 
+
+    <script>
+        const questionEl = document.getElementById('question');
+        const answerInput = document.getElementById('answer-input');
+        const resultEl = document.getElementById('result');
+        const newQuestionBtn = document.getElementById('new-question');
+        const checkAnswerBtn = document.getElementById('check-answer');
+        const historyTableBody = document.querySelector('#history-table tbody');
+        const modeToggle = document.getElementById('mode-toggle');
+        const bodyEl = document.body;
+        const toggleTableBtn = document.getElementById('toggle-table-btn');
+        const multiplicationTableWrap = document.getElementById('multiplication-table-wrap');
+        const multiplicationTable = document.getElementById('multiplication-table');
+
+        let currentQuestion = null;
+        let correctAnswer = null;
+
+// ==========================================
+// 1. GENERATOR ANGKA 
+// ==========================================
+        
+        function getRandomInt() {
+            let num = Math.floor(Math.random() * 25) - 12; 
+            return num === 0 ? 1 : num;
+        }
+
+        function generateIntegerQuestion() {
+            const num1 = getRandomInt();
+            const num2 = getRandomInt();
+            currentQuestion = `${num1} × ${num2} = ?`;
+            correctAnswer = (num1 * num2);
+            return { question: currentQuestion, answer: correctAnswer };
+        }
+
+        function generateRealQuestion() {
+            const num1 = (Math.random() * 20 - 10).toFixed(1); 
+            const num2 = (Math.random() * 20 - 10).toFixed(1);
+            currentQuestion = `${num1} × ${num2} = ?`;
+            correctAnswer = (parseFloat(num1) * parseFloat(num2));
+            return { question: currentQuestion, answer: correctAnswer };
+        }
+        
+        function generateFractionQuestion() {
+            const n1 = getRandomInt(); 
+            const d1 = Math.floor(Math.random() * 9) + 2; 
+            const n2 = getRandomInt(); 
+            const d2 = Math.floor(Math.random() * 9) + 2; 
+            
+            currentQuestion = `(${n1}/${d1}) × (${n2}/${d2}) = ?`;
+            
+            const answerNumerator = n1 * n2;
+            const answerDenominator = d1 * d2;
+            correctAnswer = `${answerNumerator}/${answerDenominator}`; 
+            
+            return { question: currentQuestion, answer: correctAnswer };
+        }
+        
+// ==========================================
+// 2. LOGIC KUIS & PEMERIKSAAN
+// ==========================================
+        
+        function clearCurrentState() {
+            answerInput.value = '';
+            resultEl.textContent = '';
+            resultEl.className = 'result';
+            answerInput.disabled = false;
+            answerInput.focus();
+        }
+
+        function newQuestion() {
+            clearCurrentState();
+            
+            const selectedType = document.querySelector('input[name="number-type"]:checked').value;
+            let qData;
+
+            if (selectedType === 'integer') {
+                qData = generateIntegerQuestion();
+                answerInput.placeholder = "Angka bulat";
+            } else if (selectedType === 'real') {
+                qData = generateRealQuestion();
+                answerInput.placeholder = "Angka desimal (3 desimal)";
+            } else if (selectedType === 'fraction') {
+                qData = generateFractionQuestion();
+                answerInput.placeholder = "Pecahan (e.g., 3/4 atau -1/2)";
+            }
+            
+            questionEl.textContent = qData.question;
+        }
+
+        function checkAnswer() {
+            if (!currentQuestion) {
+                resultEl.textContent = "Silakan klik 'Soal Baru' dulu.";
+                resultEl.classList.add('wrong');
+                return;
+            }
+            
+            const userAnswerRaw = answerInput.value.trim();
+            if (userAnswerRaw === '') return;
+
+            let isCorrect = false;
+            let displayCorrectAnswer = correctAnswer;
+            const selectedType = document.querySelector('input[name="number-type"]:checked').value;
+
+            if (selectedType === 'integer' || selectedType === 'real') {
+                const userAnswerNum = parseFloat(userAnswerRaw);
+                if (selectedType === 'real') {
+                    // Cek desimal dengan toleransi
+                    isCorrect = Math.abs(userAnswerNum - correctAnswer) < 0.001;
+                    displayCorrectAnswer = parseFloat(correctAnswer).toFixed(3);
+                } else {
+                    // Cek integer persis
+                    isCorrect = userAnswerNum === correctAnswer;
+                }
+            } else if (selectedType === 'fraction') {
+                isCorrect = compareFractions(userAnswerRaw, correctAnswer);
+                displayCorrectAnswer = simplifyFractionString(correctAnswer);
+            }
+
+            // Tampilkan hasil
+            if (isCorrect) {
+                resultEl.textContent = "✅ Benar!";
+                resultEl.classList.add('correct');
+            } else {
+                resultEl.textContent = `❌ Salah! Jawaban benar: ${displayCorrectAnswer}`;
+                resultEl.classList.add('wrong');
+            }
+            
+            updateHistoryTable(currentQuestion, userAnswerRaw, isCorrect ? "Benar" : displayCorrectAnswer);
+            answerInput.disabled = true;
+        }
+        
+        function gcd(a, b) {
+            return b ? gcd(b, a % b) : a;
+        }
+
+        function simplifyFractionString(fractionString) {
+            const parts = fractionString.split('/');
+            let n = parseInt(parts[0]);
+            let d = parseInt(parts[1]);
+            
+            if (isNaN(n) || isNaN(d) || d === 0) return fractionString;
+
+            const common = gcd(Math.abs(n), Math.abs(d));
+            n = n / common;
+            d = d / common;
+
+            if (d < 0) { n = -n; d = -d; }
+
+            return d === 1 ? String(n) : `${n}/${d}`;
+        }
+        
+        function compareFractions(userStr, correctStr) {
+            try {
+                const simplifiedUser = simplifyFractionString(userStr);
+                const simplifiedCorrect = simplifyFractionString(correctStr);
+                return simplifiedUser === simplifiedCorrect;
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        function updateHistoryTable(question, userAnswer, resultText) {
+            const row = historyTableBody.insertRow(0);
+            
+            row.insertCell(0).textContent = question;
+            row.insertCell(1).textContent = userAnswer;
+            const resultCell = row.insertCell(2);
+            resultCell.textContent = resultText;
+            
+            if (resultText === "Benar") {
+                resultCell.classList.add('correct');
+            } else {
+                resultCell.classList.add('wrong');
+            }
+            
+            while (historyTableBody.rows.length > 10) {
+                historyTableBody.deleteRow(10); 
+            }
+        }
+
+// ==========================================
+// 3. FITUR DARK/LIGHT MODE TOGGLE
+// ==========================================
+
+        function toggleMode() {
+            const isLight = bodyEl.classList.toggle('light-mode');
+            
+            if (isLight) {
+                bodyEl.classList.remove('dark-mode');
+                modeToggle.textContent = '🌙';
+            } else {
+                bodyEl.classList.add('dark-mode');
+                modeToggle.textContent = '☀️';
+            }
+        }
+        
+        modeToggle.addEventListener('click', toggleMode);
+        
+        // Atur mode awal
+        bodyEl.classList.add('dark-mode'); 
+
+// ==========================================
+// 4. FITUR TABEL PERKALIAN 1-100
+// ==========================================
+
+        function generateMultiplicationTable() {
+            let tableHTML = '<tr><th class="header-cell">×</th>';
+
+            // Header kolom (1 sampai 10)
+            for (let i = 1; i <= 10; i++) {
+                tableHTML += `<th class="header-cell">${i}</th>`;
+            }
+            tableHTML += '</tr>';
+
+            // Baris data (i × j)
+            for (let i = 1; i <= 10; i++) {
+                tableHTML += `<tr><th class="row-header">${i}</th>`;
+                for (let j = 1; j <= 10; j++) {
+                    tableHTML += `<td>${i * j}</td>`;
+                }
+                tableHTML += '</tr>';
+            }
+            
+            multiplicationTable.innerHTML = tableHTML;
+        }
+        
+        function toggleMultiplicationTable() {
+            const isHidden = multiplicationTableWrap.style.display === 'none';
+            multiplicationTableWrap.style.display = isHidden ? 'block' : 'none';
+            toggleTableBtn.textContent = isHidden ? 'Sembunyikan Tabel Perkalian 1-100' : 'Tampilkan Tabel Perkalian 1-100';
+        }
+
+        toggleTableBtn.addEventListener('click', toggleMultiplicationTable);
+        
+// ==========================================
+// 5. INISIALISASI
+// ==========================================
+        
+        newQuestionBtn.addEventListener('click', newQuestion);
+        checkAnswerBtn.addEventListener('click', checkAnswer);
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // Generate tabel saat inisialisasi
+        generateMultiplicationTable(); 
+        
+        // Mulai kuis
+        newQuestion();
+    </script>
+</body>
+</html>
